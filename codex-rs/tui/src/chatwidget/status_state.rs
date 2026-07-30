@@ -12,7 +12,7 @@ pub(super) struct StatusIndicatorState {
 impl StatusIndicatorState {
     pub(super) fn working() -> Self {
         Self {
-            header: tr!("Working").into(),
+            header: crate::tr!("Working").into(),
             details: None,
             details_max_lines: STATUS_DETAILS_DEFAULT_MAX_LINES,
         }
@@ -98,7 +98,7 @@ impl PendingGuardianReviewStatus {
         };
         let details = details?;
         let header = if self.entries.len() == 1 {
-            tr!("Reviewing approval request").into()
+            crate::tr!("Reviewing approval request").into()
         } else {
             format!("{} {} {}", crate::tr!("Reviewing"), self.entries.len(), "approval requests")
         };

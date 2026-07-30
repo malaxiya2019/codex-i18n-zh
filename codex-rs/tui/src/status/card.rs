@@ -666,7 +666,8 @@ fn status_permissions_label(
     }
     if approval_policy == AskForApproval::OnRequest && sandbox == "workspace" {
         return format!(
-            format!("{}{} ({})", crate::tr!("Workspace"), "", approval),
+            "{}{} ({approval})",
+            crate::tr!("Workspace"),
             workspace_root_suffix.unwrap_or("")
         );
     }
