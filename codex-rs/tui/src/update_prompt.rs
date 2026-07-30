@@ -217,12 +217,12 @@ impl WidgetRef for &UpdatePromptScreen {
         ));
         column.push(selection_option_row(
             1,
-            "Skip".to_string(),
+            crate::tr!("Skip").into(),
             self.highlighted == UpdateSelection::NotNow,
         ));
         column.push(selection_option_row(
             2,
-            "Skip until next version".to_string(),
+            crate::tr!("Skip until next version").into(),
             self.highlighted == UpdateSelection::DontRemind,
         ));
         column.push("");

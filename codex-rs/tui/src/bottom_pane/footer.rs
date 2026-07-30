@@ -142,7 +142,7 @@ impl CollaborationModeIndicator {
             String::new()
         };
         match self {
-            CollaborationModeIndicator::Plan => format!("Plan mode{suffix}"),
+            CollaborationModeIndicator::Plan => format!("{} {suffix}", crate::tr!("Plan mode")),
         }
     }
 
@@ -534,26 +534,26 @@ pub(crate) fn goal_status_indicator_line(
     let label = match indicator {
         GoalStatusIndicator::Active { usage } => {
             if let Some(usage) = usage {
-                format!("Pursuing goal ({usage})")
+                format!("{} ({})", crate::tr!("Pursuing goal"), usage)
             } else {
-                "Pursuing goal".to_string()
+                crate::tr!("Pursuing goal").into()
             }
         }
-        GoalStatusIndicator::Paused => "Goal paused (/goal resume)".to_string(),
-        GoalStatusIndicator::Blocked => "Goal stalled (/goal resume)".to_string(),
-        GoalStatusIndicator::UsageLimited => "Goal hit usage limits (/goal resume)".to_string(),
+        GoalStatusIndicator::Paused => format!("{} (/goal resume)", crate::tr!("Goal paused")),
+        GoalStatusIndicator::Blocked => format!("{} (/goal resume)", crate::tr!("Goal stalled")),
+        GoalStatusIndicator::UsageLimited => format!("{} (/goal resume)", crate::tr!("Goal hit usage limits")),
         GoalStatusIndicator::BudgetLimited { usage } => {
             if let Some(usage) = usage {
-                format!("Goal unmet ({usage})")
+                format!("{} ({})", crate::tr!("Goal unmet"), usage)
             } else {
-                "Goal abandoned".to_string()
+                crate::tr!("Goal abandoned").into()
             }
         }
         GoalStatusIndicator::Complete { usage } => {
             if let Some(usage) = usage {
-                format!("Goal achieved ({usage})")
+                format!("{} ({})", crate::tr!("Goal achieved"), usage)
             } else {
-                "Goal achieved".to_string()
+                crate::tr!("Goal achieved").into()
             }
         }
     };

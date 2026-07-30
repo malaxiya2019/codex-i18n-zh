@@ -676,7 +676,7 @@ impl ChatWidget {
                 .and_then(|summary| summary.branch_change_stats.as_ref())
                 .map(|stats| {
                     if stats.additions == 0 && stats.deletions == 0 {
-                        "No changes".to_string()
+                        crate::tr!("No changes").into()
                     } else {
                         format!("+{} -{}", stats.additions, stats.deletions)
                     }
@@ -730,9 +730,9 @@ impl ChatWidget {
             StatusLineItem::SessionId => self.thread_id.map(|id| id.to_string()),
             StatusLineItem::FastMode => Some(
                 if self.current_service_tier() == Some(ServiceTier::Fast.request_value()) {
-                    "Fast on".to_string()
+                    crate::tr!("Fast on").into()
                 } else {
-                    "Fast off".to_string()
+                    crate::tr!("Fast off").into()
                 },
             ),
             StatusLineItem::RawOutput => self.raw_output_mode().then(|| "raw output".to_string()),
@@ -892,24 +892,24 @@ impl ChatWidget {
     /// as `Ready` regardless of the last active status bucket.
     pub(super) fn run_state_status_text(&self) -> String {
         if self.mcp_startup_status.is_some() {
-            return "Starting".to_string();
+            return crate::tr!("Starting").into();
         }
 
         match self.status_state.terminal_title_status_kind {
             TerminalTitleStatusKind::Working if !self.bottom_pane.is_task_running() => {
-                "Ready".to_string()
+                crate::tr!("Ready").into()
             }
             TerminalTitleStatusKind::WaitingForBackgroundTerminal
                 if !self.bottom_pane.is_task_running() =>
             {
-                "Ready".to_string()
+                crate::tr!("Ready").into()
             }
             TerminalTitleStatusKind::Thinking if !self.bottom_pane.is_task_running() => {
-                "Ready".to_string()
+                crate::tr!("Ready").into()
             }
-            TerminalTitleStatusKind::Working => "Working".to_string(),
-            TerminalTitleStatusKind::WaitingForBackgroundTerminal => "Waiting".to_string(),
-            TerminalTitleStatusKind::Thinking => "Thinking".to_string(),
+            TerminalTitleStatusKind::Working => crate::tr!("Working").into(),
+            TerminalTitleStatusKind::WaitingForBackgroundTerminal => crate::tr!("Waiting").into(),
+            TerminalTitleStatusKind::Thinking => crate::tr!("Thinking").into(),
         }
     }
 
@@ -1107,26 +1107,26 @@ fn permissions_display(config: &Config) -> String {
     if let Some(details) = summary.strip_prefix("read-only")
         && !details.contains("(network access enabled)")
     {
-        return "Read Only".to_string();
+        return crate::tr!("Read Only").into();
     }
     if let Some(details) = summary.strip_prefix("workspace-write")
         && !details.contains("(network access enabled)")
     {
-        return "Workspace".to_string();
+        return crate::tr!("Workspace").into();
     }
     if permission_profile == PermissionProfile::Disabled {
-        return "Full Access".to_string();
+        return crate::tr!("Full Access").into();
     }
 
-    "Custom permissions".to_string()
+    crate::tr!("Custom permissions").into()
 }
 
 fn approval_mode_display(config: &Config) -> String {
     let approval_policy = AskForApproval::from(config.permissions.approval_policy.value());
     if approval_policy == AskForApproval::OnRequest {
         return match config.approvals_reviewer {
-            ApprovalsReviewer::AutoReview => "Approve for me".to_string(),
-            ApprovalsReviewer::User => "Ask for approval".to_string(),
+            ApprovalsReviewer::AutoReview => crate::tr!("Approve for me").into(),
+            ApprovalsReviewer::User => crate::tr!("Ask for approval").into(),
         };
     }
 

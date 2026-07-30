@@ -152,7 +152,7 @@ impl ChatWidget {
             ));
 
             items.push(SelectionItem {
-                name: "All models".to_string(),
+                name: crate::tr!("All models").into(),
                 description,
                 is_current,
                 actions,
@@ -162,7 +162,7 @@ impl ChatWidget {
         }
 
         let header = self.model_menu_header(
-            "Select Model",
+            crate::tr!("Select Model"),
             "Pick a quick auto mode or browse all models.",
         );
         self.bottom_pane.show_selection_view(SelectionViewParams {
@@ -221,7 +221,7 @@ impl ChatWidget {
         }
 
         let header = self.model_menu_header(
-            "Select Model and Effort",
+            crate::tr!("Select Model and Effort"),
             "Access legacy models by running codex -m <model_name> or in your config.toml",
         );
         self.bottom_pane.show_selection_view(SelectionViewParams {
@@ -638,14 +638,14 @@ impl ChatWidget {
 
     pub(super) fn reasoning_effort_label(effort: &ReasoningEffortConfig) -> String {
         match effort {
-            ReasoningEffortConfig::None => "None".to_string(),
-            ReasoningEffortConfig::Minimal => "Minimal".to_string(),
-            ReasoningEffortConfig::Low => "Low".to_string(),
-            ReasoningEffortConfig::Medium => "Medium".to_string(),
-            ReasoningEffortConfig::High => "High".to_string(),
-            ReasoningEffortConfig::XHigh => "Extra high".to_string(),
-            ReasoningEffortConfig::Max => "Max".to_string(),
-            ReasoningEffortConfig::Ultra => "Ultra".to_string(),
+            ReasoningEffortConfig::None => crate::tr!("None").into(),
+            ReasoningEffortConfig::Minimal => crate::tr!("Minimal").into(),
+            ReasoningEffortConfig::Low => crate::tr!("Low").into(),
+            ReasoningEffortConfig::Medium => crate::tr!("Medium").into(),
+            ReasoningEffortConfig::High => crate::tr!("High").into(),
+            ReasoningEffortConfig::XHigh => crate::tr!("Extra high").into(),
+            ReasoningEffortConfig::Max => crate::tr!("Max").into(),
+            ReasoningEffortConfig::Ultra => crate::tr!("Ultra").into(),
             ReasoningEffortConfig::Custom(value) => value.clone(),
         }
     }

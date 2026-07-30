@@ -79,7 +79,7 @@ impl ChatWidget {
             .collect();
 
         let mut header = ColumnRenderable::new();
-        header.push(Line::from("Select Personality".bold()));
+        header.push(Line::from(crate::tr!("Select Personality").bold()));
         header.push(Line::from("Choose a communication style for Codex.".dim()));
 
         self.bottom_pane.show_selection_view(SelectionViewParams {
@@ -115,9 +115,9 @@ impl ChatWidget {
 
     fn personality_label(personality: Personality) -> &'static str {
         match personality {
-            Personality::None => "None",
-            Personality::Friendly => "Friendly",
-            Personality::Pragmatic => "Pragmatic",
+            Personality::None => crate::tr!("None"),
+            Personality::Friendly => crate::tr!("Friendly"),
+            Personality::Pragmatic => crate::tr!("Pragmatic"),
         }
     }
 

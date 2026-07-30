@@ -12,14 +12,17 @@ pub(super) struct StatusIndicatorState {
 impl StatusIndicatorState {
     pub(super) fn working() -> Self {
         Self {
-            header: String::from("Working"),
+            header: tr!("Working").into(),
             details: None,
             details_max_lines: STATUS_DETAILS_DEFAULT_MAX_LINES,
         }
     }
 
     pub(super) fn is_guardian_review(&self) -> bool {
-        self.header == "Reviewing approval request" || self.header.starts_with("Reviewing ")
+        self.header == "Reviewing approval request"
+            || self.header == crate::tr!("Reviewing approval request")
+            || self.header.starts_with("Reviewing ")
+            || self.header.starts_with(crate::tr!("Reviewing"))
     }
 }
 
@@ -95,9 +98,9 @@ impl PendingGuardianReviewStatus {
         };
         let details = details?;
         let header = if self.entries.len() == 1 {
-            String::from("Reviewing approval request")
+            tr!("Reviewing approval request").into()
         } else {
-            format!("Reviewing {} approval requests", self.entries.len())
+            format!("{} {} {}", crate::tr!("Reviewing"), self.entries.len(), "approval requests")
         };
         let details_max_lines = if self.entries.len() == 1 { 1 } else { 4 };
         Some(StatusIndicatorState {
@@ -160,7 +163,7 @@ mod tests {
         assert_eq!(
             state.status_indicator_state(),
             Some(StatusIndicatorState {
-                header: "Reviewing 2 approval requests".to_string(),
+                header: "Reviewing 2 approval requests".into(),
                 details: Some("• first\n• second".to_string()),
                 details_max_lines: 4,
             })
@@ -170,13 +173,13 @@ mod tests {
     #[test]
     fn retry_status_header_is_taken_once() {
         let mut state = StatusState::default();
-        state.current_status.header = "Thinking".to_string();
+        state.current_status.header = crate::tr!("Thinking").into();
 
         state.remember_retry_status_header();
 
         assert_eq!(
             state.take_retry_status_header(),
-            Some("Thinking".to_string())
+            Some(crate::tr!("Thinking").into())
         );
         assert_eq!(state.take_retry_status_header(), None);
     }

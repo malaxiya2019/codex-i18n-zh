@@ -417,8 +417,8 @@ impl StatusHistoryCell {
             StatusRateLimitData::Available(rows_data) => {
                 if rows_data.is_empty() {
                     return vec![formatter.line(
-                        "Limits",
-                        vec![Span::from("not available for this account").dim()],
+                        crate::tr!("Limits"),
+                        vec![Span::from(crate::tr!("not available for this account")).dim()],
                     )];
                 }
 
@@ -428,7 +428,7 @@ impl StatusHistoryCell {
                 let mut lines =
                     self.rate_limit_row_lines(rows_data, available_inner_width, formatter);
                 lines.push(formatter.line(
-                    "Warning",
+                    crate::tr!("Warning"),
                     vec![Span::from(if state.refreshing_rate_limits {
                         "limits may be stale - run /status again shortly."
                     } else {
@@ -450,7 +450,7 @@ impl StatusHistoryCell {
                     vec![Span::from(if state.refreshing_rate_limits {
                         "refresh requested; run /status again shortly."
                     } else {
-                        "data not available yet"
+                        crate::tr!("data not available yet")
                     })
                     .dim()],
                 )]
@@ -555,7 +555,7 @@ impl StatusHistoryCell {
         match &state.rate_limits {
             StatusRateLimitData::Available(rows) => {
                 if rows.is_empty() {
-                    push_label(labels, seen, "Limits");
+                    push_label(labels, seen, crate::tr!("Limits"));
                 } else {
                     for row in rows {
                         push_label(labels, seen, row.label.as_str());
@@ -566,10 +566,10 @@ impl StatusHistoryCell {
                 for row in rows {
                     push_label(labels, seen, row.label.as_str());
                 }
-                push_label(labels, seen, "Warning");
+                push_label(labels, seen, crate::tr!("Warning"));
             }
-            StatusRateLimitData::Unavailable => push_label(labels, seen, "Limits"),
-            StatusRateLimitData::Missing => push_label(labels, seen, "Limits"),
+            StatusRateLimitData::Unavailable => push_label(labels, seen, crate::tr!("Limits")),
+            StatusRateLimitData::Missing => push_label(labels, seen, crate::tr!("Limits")),
         }
     }
 }
@@ -626,9 +626,9 @@ fn status_permissions_label(
     match active_id {
         Some(BUILT_IN_PERMISSION_PROFILE_READ_ONLY) => {
             let label = if sandbox == "read-only with network access" {
-                "Read Only with network access"
+                crate::tr!("Read Only with network access")
             } else {
-                "Read Only"
+                crate::tr!("Read Only")
             };
             return format!("{label} ({approval})");
         }
@@ -640,10 +640,8 @@ fn status_permissions_label(
                 );
             }
             "workspace with network access" => {
-                return format!(
-                    "Workspace with network access{} ({approval})",
-                    workspace_root_suffix.unwrap_or("")
-                );
+                return format!("{}{} ({})", crate::tr!("Workspace with network access"),
+                    workspace_root_suffix.unwrap_or(""), approval);
             }
             _ => {}
         },
@@ -668,7 +666,7 @@ fn status_permissions_label(
     }
     if approval_policy == AskForApproval::OnRequest && sandbox == "workspace" {
         return format!(
-            "Workspace{} ({approval})",
+            format!("{}{} ({})", crate::tr!("Workspace"), "", approval),
             workspace_root_suffix.unwrap_or("")
         );
     }
@@ -708,7 +706,7 @@ impl HistoryCell for StatusHistoryCell {
         let mut lines: Vec<Line<'static>> = Vec::new();
         lines.push(Line::from(vec![
             Span::from(format!("{}>_ ", FieldFormatter::INDENT)).dim(),
-            Span::from("OpenAI Codex").bold(),
+            Span::from(crate::tr!("OpenAI Codex")).bold(),
             Span::from(" ").dim(),
             Span::from(format!("(v{CODEX_CLI_VERSION})")).dim(),
         ]));
@@ -730,7 +728,7 @@ impl HistoryCell for StatusHistoryCell {
             }
         });
 
-        let mut labels: Vec<String> = vec!["Model", "Directory", "Permissions", "Agents.md"]
+        let mut labels: Vec<String> = vec![crate::tr!("Model"), crate::tr!("Directory"), crate::tr!("Permissions"), crate::tr!("Agents.md")]
             .into_iter()
             .map(str::to_string)
             .collect();
@@ -749,26 +747,26 @@ impl HistoryCell for StatusHistoryCell {
             .clone();
 
         if self.model_provider.is_some() {
-            push_label(&mut labels, &mut seen, "Model provider");
+            push_label(&mut labels, &mut seen, crate::tr!("Model provider"));
         }
         if account_value.is_some() {
-            push_label(&mut labels, &mut seen, "Account");
+            push_label(&mut labels, &mut seen, crate::tr!("Account"));
         }
         if thread_name.is_some() {
-            push_label(&mut labels, &mut seen, "Thread name");
+            push_label(&mut labels, &mut seen, crate::tr!("Thread name"));
         }
         if self.session_id.is_some() {
-            push_label(&mut labels, &mut seen, "Session");
+            push_label(&mut labels, &mut seen, crate::tr!("Session"));
         }
         if self.session_id.is_some() && self.forked_from.is_some() {
-            push_label(&mut labels, &mut seen, "Forked from");
+            push_label(&mut labels, &mut seen, crate::tr!("Forked from"));
         }
         if self.collaboration_mode.is_some() {
-            push_label(&mut labels, &mut seen, "Collaboration mode");
+            push_label(&mut labels, &mut seen, crate::tr!("Collaboration mode"));
         }
-        push_label(&mut labels, &mut seen, "Token usage");
+        push_label(&mut labels, &mut seen, crate::tr!("Token usage"));
         if self.token_usage.context_window.is_some() {
-            push_label(&mut labels, &mut seen, "Context window");
+            push_label(&mut labels, &mut seen, crate::tr!("Context window"));
         }
 
         self.collect_rate_limit_labels(&rate_limit_state, &mut seen, &mut labels);
@@ -777,12 +775,12 @@ impl HistoryCell for StatusHistoryCell {
         let value_width = formatter.value_width(available_inner_width);
 
         let note_first_line = Line::from(vec![
-            Span::from("Visit ").cyan(),
+            Span::from(crate::tr!("Visit ")).cyan(),
             CHATGPT_USAGE_URL.cyan().underlined(),
-            Span::from(" for up-to-date").cyan(),
+            Span::from(crate::tr!(" for up-to-date")).cyan(),
         ]);
         let note_second_line = Line::from(vec![
-            Span::from("information on rate limits and credits").cyan(),
+            Span::from(crate::tr!("information on rate limits and credits")).cyan(),
         ]);
         let note_lines = adaptive_wrap_lines(
             [note_first_line, note_second_line],
@@ -807,7 +805,7 @@ impl HistoryCell for StatusHistoryCell {
             );
             let mut wrapped_remote = wrapped_remote.into_iter();
             if let Some(first) = wrapped_remote.next() {
-                lines.push(formatter.line("Remote", first.spans));
+                lines.push(formatter.line(crate::tr!("Remote"), first.spans));
                 lines.extend(wrapped_remote.map(|line| formatter.continuation(line.spans)));
             }
             lines.push(Line::from(Vec::<Span<'static>>::new()));
@@ -822,41 +820,41 @@ impl HistoryCell for StatusHistoryCell {
 
         let directory_value = format_directory_display(&self.directory, Some(value_width));
 
-        lines.push(formatter.line("Model", model_spans));
+        lines.push(formatter.line(crate::tr!("Model"), model_spans));
         if let Some(model_provider) = self.model_provider.as_ref() {
-            lines.push(formatter.line("Model provider", vec![Span::from(model_provider.clone())]));
+            lines.push(formatter.line(crate::tr!("Model provider"), vec![Span::from(model_provider.clone())]));
         }
-        lines.push(formatter.line("Directory", vec![Span::from(directory_value)]));
-        lines.push(formatter.line("Permissions", vec![Span::from(self.permissions.clone())]));
-        lines.push(formatter.line("Agents.md", vec![Span::from(agents_summary)]));
+        lines.push(formatter.line(crate::tr!("Directory"), vec![Span::from(directory_value)]));
+        lines.push(formatter.line(crate::tr!("Permissions"), vec![Span::from(self.permissions.clone())]));
+        lines.push(formatter.line(crate::tr!("Agents.md"), vec![Span::from(agents_summary)]));
 
         if let Some(account_value) = account_value {
-            lines.push(formatter.line("Account", vec![Span::from(account_value)]));
+            lines.push(formatter.line(crate::tr!("Account"), vec![Span::from(account_value)]));
         }
 
         if let Some(thread_name) = thread_name {
-            lines.push(formatter.line("Thread name", vec![Span::from(thread_name.to_string())]));
+            lines.push(formatter.line(crate::tr!("Thread name"), vec![Span::from(thread_name.to_string())]));
         }
         if let Some(collab_mode) = self.collaboration_mode.as_ref() {
-            lines.push(formatter.line("Collaboration mode", vec![Span::from(collab_mode.clone())]));
+            lines.push(formatter.line(crate::tr!("Collaboration mode"), vec![Span::from(collab_mode.clone())]));
         }
         if let Some(session) = self.session_id.as_ref() {
-            lines.push(formatter.line("Session", vec![Span::from(session.clone())]));
+            lines.push(formatter.line(crate::tr!("Session"), vec![Span::from(session.clone())]));
         }
         if self.session_id.is_some()
             && let Some(forked_from) = self.forked_from.as_ref()
         {
-            lines.push(formatter.line("Forked from", vec![Span::from(forked_from.clone())]));
+            lines.push(formatter.line(crate::tr!("Forked from"), vec![Span::from(forked_from.clone())]));
         }
 
         lines.push(Line::from(Vec::<Span<'static>>::new()));
         // Hide token usage only for ChatGPT subscribers
         if !matches!(self.account, Some(StatusAccountDisplay::ChatGpt { .. })) {
-            lines.push(formatter.line("Token usage", self.token_usage_spans()));
+            lines.push(formatter.line(crate::tr!("Token usage"), self.token_usage_spans()));
         }
 
         if let Some(spans) = self.context_window_spans() {
-            lines.push(formatter.line("Context window", spans));
+            lines.push(formatter.line(crate::tr!("Context window"), spans));
         }
 
         lines.extend(self.rate_limit_lines(&rate_limit_state, available_inner_width, &formatter));
